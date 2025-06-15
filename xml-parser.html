@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XML Parser</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+line-height: 1.6;
+margin: 0 auto;
+max-width: 800px;
+padding: 20px;
+}
+.book {
+border: 1px solid #ddd;
+margin-bottom: 15px;
+padding: 15px;
+border-radius: 5px;
+}
+.book h2 {
+margin-top: 0;
+color: #333;
+}
+.filter-controls {
+margin-bottom: 20px;
+padding: 15px;background-color: #f5f5f5;
+border-radius: 5px;
+}
+</style>
+</head>
+<body>
+<h1>Library Collection</h1>
+<div class="filter-controls">
+<label for="genre-filter">Filter by Genre:</label>
+<select id="genre-filter">
+<option value="">All Genres</option>
+<option value="Thriller">Thriller</option>
+<option value="Fantasy">Fantasy</option>
+<option value="Children">Children</option>
+<option value="Historical Fiction">Historical Fiction</option>
+<option value="Horror">Horror</option>
+</select>
+<label for="year-min">Year Range:</label>
+<input type="number" id="year-min" placeholder="Min Year">
+<input type="number" id="year-max" placeholder="Max Year">
+<button id="apply-filters">Apply Filters</button>
+</div>
+<div id="books-container"></div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+let booksData = [];
+const genres = new Set();
+// Load and parse the XML file
+fetch('books.xml')
+.then(response => response.text())
+.then(xmlString => {
+const parser = new DOMParser();
+const xmlDoc = parser.parseFromString(xmlString, 'text/xml');
+// Get all book elements
+const bookElements = xmlDoc.getElementsByTagName('book');
+// Convert to array of objects for easier manipulation
+for (let i = 0; i < bookElements.length; i++) {
+const book = bookElements[i];
+const authors = [];
+// Get all authors
+const authorElements = book.getElementsByTagName('author');
+for (let j = 0; j < authorElements.length; j++) {
+const author = authorElements[j];
+const nationality = author.getAttribute('nationality') || '';
+authors.push({
+name: author.textContent,nationality: nationality
+});
+}
+// Get publisher info if it exists
+let publisher = null;
+const publisherElement =
+book.getElementsByTagName('publisher')[0];
+if (publisherElement) {
+publisher = {
+name:
+publisherElement.getElementsByTagName('name')[0].textContent,
+location:
+publisherElement.getElementsByTagName('location')[0].textContent
+};
+}
+// Create book object
+const bookObj = {
+id: book.getAttribute('id'),
+title: book.getElementsByTagName('title')[0].textContent,
+authors: authors,
+year: parseInt(book.getElementsByTagName('publishedyear')[0].textContent),
+genre: book.getElementsByTagName('genre')[0].textContent,
+price:
+parseFloat(book.getElementsByTagName('price')[0].textContent),
+publisher: publisher
+};
+booksData.push(bookObj);
+genres.add(bookObj.genre);
+}
+// Populate genre filter
+const genreFilter = document.getElementById('genre-filter');
+genres.forEach(genre => {
+const option = document.createElement('option');
+option.value = genre;
+option.textContent = genre;
+genreFilter.appendChild(option);
+});
+// Display books
+displayBooks(booksData);
+// Set up filter functionality
+document.getElementById('apply-filters').addEventListener('click', 
+function() {const selectedGenre = document.getElementById('genrefilter').value;
+const yearMin = document.getElementById('year-min').value ?
+parseInt(document.getElementById('year-min').value) : 0;
+const yearMax = document.getElementById('year-max').value ?
+parseInt(document.getElementById('year-max').value) : 9999;
+const filteredBooks = booksData.filter(book => {
+const genreMatch = selectedGenre ? book.genre === selectedGenre : true;
+const yearMatch = book.year >= yearMin && book.year <= yearMax;
+return genreMatch && yearMatch;
+});
+displayBooks(filteredBooks);
+});
+})
+.catch(error => {
+console.error('Error loading XML file:', error);
+document.getElementById('books-container').innerHTML =
+'<p>Error loading book data. Please check the console for details.</p>';
+});
+function displayBooks(books) {
+const container = document.getElementById('books-container');
+container.innerHTML = '';
+if (books.length === 0) {
+container.innerHTML = '<p>No books match your filters.</p>';
+return;
+}
+books.forEach(book => {
+const bookElement = document.createElement('div');
+bookElement.className = 'book';
+const authorsText = book.authors.map(a =>
+a.nationality ? `${a.name} (${a.nationality})` : a.name
+).join(', ');
+const publisherText = book.publisher ?
+`<p><strong>Publisher:</strong> ${book.publisher.name},
+${book.publisher.location}</p>` : '';
+bookElement.innerHTML = `
+<h2>${book.title}</h2>
+<p><strong>ID:</strong> ${book.id}</p>
+<p><strong>Author(s):</strong> ${authorsText}</p><p><strong>Published:</strong> ${book.year}</p>
+<p><strong>Genre:</strong> ${book.genre}</p>
+<p><strong>Price:</strong> $${book.price.toFixed(2)}</p>
+${publisherText}
+`;
+container.appendChild(bookElement);
+});
+}
+});
+</script>
+</body>
+</html>
