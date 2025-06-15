@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="books.xsl"?>
+<!DOCTYPE library SYSTEM "books.dtd">
+<library xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="books.xsd">
+    <book id="b001">
+        <title>Silence of the Lambs</title>
+        <author>
+            <name>Thomas Harris</name>
+            <birthdate>1940-03-11</birthdate>
+        </author>
+        <publisher>
+            <name>St. Martin's Press</name>
+            <location>New York, NY</location>
+        </publisher>
+        <published-year>1988</published-year>
+        <genre>Thriller</genre>
+        <price>15.99</price>
+    </book>
+    <book id="b002">
+        <title>Harry Potter and the Sorcerer's Stone</title>
+        <author>
+            <name>J.K. Rowling</name>
+            <birthdate>1965-07-31</birthdate>
+        </author>
+        <publisher>
+            <name>Bloomsbury</name>
+            <location>London, UK</location>
+        </publisher>
+        <published-year>1997</published-year>
+        <genre>Fantasy</genre>
+        <price>10.99</price>
+    </book>
+    <book id="b003">
+        <title>Doraemon</title>
+        <author>
+            <name>Fujiko F. Fujio</name>
+            <birthdate>1933-12-01</birthdate>
+        </author>
+        <publisher>
+            <name>Shogakukan</name>
+            <location>Tokyo, Japan</location>
+        </publisher>
+        <published-year>1970</published-year>
+        <genre>Children</genre>
+        <price>1.99</price>
+    </book>
+    <book id="b004">
+        <title>Three Kingdoms</title>
+        <author>
+            <name>Luo Guanzhong</name>
+            <birthdate>est. 1330s</birthdate>
+        </author>
+        <publisher>
+            <name>Various</name>
+            <location>China</location>
+        </publisher>
+        <published-year>14th Century</published-year>
+        <genre>Historical Fiction</genre>
+        <price>15.99</price>
+    </book>
+    <book id="b005">
+        <title>IT</title>
+        <author>
+            <name>Stephen King</name>
+            <birthdate>1947-09-21</birthdate>
+        </author>
+        <publisher>
+            <name>Viking Press</name>
+            <location>New York, NY</location>
+        </publisher>
+        <published-year>1986</published-year>
+        <genre>Horror</genre>
+        <price>19.99</price>
+    </book>
+</library>
